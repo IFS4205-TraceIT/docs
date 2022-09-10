@@ -29,7 +29,7 @@ Technically, we can use the root CA to sign and issue certificates, but it is no
     * Read more [here](https://docs.nginx.com/nginx/admin-guide/web-server/app-gateway-uwsgi-django/)
 
 * [ ] TLS between `Django` web applications, anonymization process and `PostgreSQL`
-    * Ensure encrypted delivery of database query results
+    * Ensure encrypted retrieval of database query results
     * Sample database configuration:
         ```python
         DATABASES = {
@@ -54,3 +54,4 @@ Technically, we can use the root CA to sign and issue certificates, but it is no
     * Ensure encrypted delivery of logs and metrics
 
 * [ ] **(Optional)** TLS between Grafana and Grafana Loki
+    * Ensure encrypted retrieval of logs and metrics
