@@ -80,13 +80,15 @@ On success, the server will return a `200 OK` with the user details and the temp
 **Response Example:**
 ```json
 {
-  "username": "kelvneo",
-  "email": "kelvin@example.com",
-  "phone_number": "+6591234567",
-  "has_otp": true,
-  "tokens": {
-    "access": "...",
-    "refresh": "..."
+  "user": {
+    "username": "kelvneo",
+    "email": "kelvin@example.com",
+    "phone_number": "+6591234567",
+    "has_otp": true,
+    "tokens": {
+      "access": "...",
+      "refresh": "..."
+    }
   }
 }
 ```
@@ -330,10 +332,12 @@ On success, the server will return a `200 OK` with the user details.
 **Response Example:**
 ```json
 {
-  "username": "kelvneo",
-  "email": "kelvin@example.com",
-  "phone_number": "+6591234567",
-  "has_otp": true
+  "user": {
+    "username": "kelvneo",
+    "email": "kelvin@example.com",
+    "phone_number": "+6591234567",
+    "has_otp": true
+  }
 }
 ```
 
@@ -382,10 +386,12 @@ On success, the server will return a `200 OK` with the user details.
 **Response Example:**
 ```json
 {
-  "username": "kelvneo",
-  "email": "kelvin@example.com",
-  "phone_number": "+6591234567",
-  "has_otp": true
+  "user": {
+    "username": "kelvneo",
+    "email": "kelvin@example.com",
+    "phone_number": "+6591234567",
+    "has_otp": true
+  }
 }
 ```
 
