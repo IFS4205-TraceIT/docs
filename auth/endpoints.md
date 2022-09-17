@@ -8,7 +8,8 @@ This document will detail all the endpoints.
 - [TOTP Verification](#totp-verification)
 - [Token Refresh](#token-refresh)
 - [Logout](#logout)
-- [Change User Details](#change-user-details)
+- [Get User Details](#get-user-details)
+- [Update User Details](#update-user-details)
 
 ## Register
 This route is used to register a user into the system.
@@ -172,7 +173,7 @@ This route is used to authenticate the user with their TOTP, providing two-facto
 
 The access token from `/auth/login` is **required** to call this route. 
 
-**Route:** `/auth/totp/register`
+**Route:** `/auth/totp`
 
 ### Request Payload
 **Request Type:** `POST`
@@ -211,6 +212,193 @@ If successful, the reponse would generate a new JWT to be used for the applicati
 If the user did not enter the right TOTP, the response would return a `401 Unauthorized` message.
 
 **Response Example:**
+```json
+{
+  "errors": [...]
+}
+```
+
+---
+
+## Token Refresh
+
+This route is used to refresh the token of the user.
+
+The access token from `/auth/login` or `/auth/totp` is **required** to call this route. 
+
+**Route:** `/auth/refresh`
+
+### Request Payload
+**Request Type:** `POST`
+
+**Request Header:**
+- `Authorization`: Prepend `Bearer ` on the token and place it with this header.
+
+**Request Payload:**
+```json
+{
+  "refresh": "..."
+}
+```
+
+**Payload Details:**
+- `refresh`: The refresh token given by the server.
+
+### Response Payload
+
+#### Success
+If successful, the reponse would generate a new JWT to be used for the application routes.
+
+**Response Example:**
+```json
+{
+  "access": "...",
+  "refresh": "...",
+}
+```
+
+**Response Details:**
+- `access`: The JWT access token to place into the header of HTTP requests under `Authorization: Bearer ...`
+- `refresh`: The JWT refresh token to refresh the access tokens before it expires. See `/auth/refresh`.
+
+#### Authentication Error
+If the user did not enter the right refresh token or access token, the response would return a `401 Unauthorized` message.
+
+**Response Example:**
+```json
+{
+  "errors": [...]
+}
+```
+
+---
+
+## Logout
+
+This route is used to invalidate the refresh token of the user if they wishes to log out.
+
+**Route:** `/auth/logout`
+
+### Request Payload
+**Request Type:** `POST`
+
+**Request Payload:**
+```json
+{
+  "refresh": "..."
+}
+```
+
+**Payload Details:**
+- `refresh`: The refresh token given by the server.
+
+### Response Payload
+
+#### Success
+If successful, the reponse would return a HTTP status code of `204 No Content`.
+
+#### Authentication Error
+If the user did not enter the right refresh token or access token, the response would return a `401 Unauthorized` message.
+
+**Response Example:**
+```json
+{
+  "errors": [...]
+}
+```
+
+---
+
+## Get User Details
+This route is used to get the details of the user in the JSON Web Token.
+
+The access token from `/auth/totp` is **required** to call this route. 
+
+**Route:** `/auth/user`
+
+### Request Payload
+**Request Type:** `GET`
+
+**Request Header:**
+- `Authorization`: Prepend `Bearer ` on the token and place it with this header.
+
+### Response Payload
+
+#### Success
+On success, the server will return a `200 OK` with the user details.
+
+**Response Example:**
+```json
+{
+  "username": "kelvneo",
+  "email": "kelvin@example.com",
+  "phone_number": "+6591234567",
+  "has_otp": true
+}
+```
+
+**Response Details:**
+- `username`: The username the user is associated with
+- `email`: The email the user has given to the server
+- `phone_number`: The phone number the user has given to the user
+- `has_otp`: Checks if the user has an TOTP device. If `false`, the user can send a `POST` request to `/auth/totp/register` to generate a TOTP secret
+
+---
+
+## Update User Details
+This route is used to update the details of the user in the JSON Web Token
+
+The access token from `/auth/totp` is **required** to call this route. 
+
+**Route:** `/auth/user`
+
+### Request Payload
+**Request Type:** `POST`
+
+**Request Header:**
+- `Authorization`: Prepend `Bearer ` on the token and place it with this header.
+
+**Request Example:**
+```json
+{
+  "username": "kelvneo",
+  "password": "testpassword",
+  "email": "kelvin@example.com",
+  "phone_number": "+6591234567"
+}
+```
+
+**Payload Details:**
+- `username`: The username the user will log in as. Must be unique and is only alphanumeric.
+- `password`: The password the user will log in with. Must be at least 8 characters long.
+- `email`: The email associated with the user. Must contain `@` with domain.
+- `phone_number`: The phone number of the user.
+
+### Response Payload
+
+#### Success
+On success, the server will return a `200 OK` with the user details.
+
+**Response Example:**
+```json
+{
+  "username": "kelvneo",
+  "email": "kelvin@example.com",
+  "phone_number": "+6591234567",
+  "has_otp": true
+}
+```
+
+**Response Details:**
+- `username`: The username the user is associated with
+- `email`: The email the user has given to the server
+- `phone_number`: The phone number the user has given to the user
+- `has_otp`: Checks if the user has an TOTP device. If `false`, the user can send a `POST` request to `/auth/totp/register` to generate a TOTP secret
+
+#### Validation Errors
+If any of the fields are malformed, or if the record exists in the database, the server will return a `400 Bad Request`.
+
+**Response Payload:**
 ```json
 {
   "errors": [...]
